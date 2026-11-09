@@ -124,10 +124,10 @@ static void network_thread(int cpu_id, uint16_t port)
 
     if (tls.udp_msgs.empty())
     {
-        tls.udp_msgs.resize(1024);
-        tls.udp_iovs.resize(tls.udp_msgs.size());
-        tls.udp_addrs.resize(tls.udp_msgs.size());
-        tls.udp_buffers.resize(tls.udp_msgs.size());
+        tls.udp_iovs.resize(sysconf(_SC_IOV_MAX));
+        tls.udp_msgs.resize(tls.udp_iovs.size());
+        tls.udp_addrs.resize(tls.udp_iovs.size());
+        tls.udp_buffers.resize(tls.udp_iovs.size());
         for (int i = 0; i < tls.udp_msgs.size(); ++i)
         {
             tls.udp_iovs[i].iov_base            = tls.udp_buffers[i].data();
