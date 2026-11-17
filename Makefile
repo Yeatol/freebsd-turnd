@@ -1,5 +1,5 @@
 PROG_CXX=	turnd
-SRCS=		main.cpp network.cpp turn.cpp
+SRCS=		main.cpp turn.cpp network_shim.cpp
 MAN=
 
 CXXSTD=		c++23

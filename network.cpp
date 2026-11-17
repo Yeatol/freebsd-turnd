@@ -49,7 +49,7 @@ static thread_local struct network_tls_t
     std::vector<std::array<uint8_t, 1232>> udp_buffers;
 } tls;
 
-static int network_socket_udp(uint16_t port)
+static int network_udp_socket(uint16_t port)
 {
     int fd = socket(AF_INET6, SOCK_DGRAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_UDP);
 
@@ -116,10 +116,11 @@ static void network_thread(int cpu_id, uint16_t port)
     CPU_SET(cpu_id, &mask);
     if (cpuset_setaffinity(CPU_LEVEL_WHICH, CPU_WHICH_TID, -1, sizeof(mask), &mask) != 0) _exit(-1);
 
-    struct kevent event = {};
     int kqueue_id  = kqueue1(O_CLOEXEC);
-    int socket_udp = network_socket_udp(port);
-    EV_SET(&event, socket_udp, EVFILT_READ, EV_ADD, 0, 0, NULL);
+    int udp_socket = network_udp_socket(port);
+
+    struct kevent event = {};
+    EV_SET(&event, udp_socket, EVFILT_READ, EV_ADD, 0, 0, NULL);
     if (kevent(kqueue_id, &event, 1, 0, 0, 0) == -1) _exit(-1);
 
     if (tls.udp_msgs.empty())

@@ -94,7 +94,13 @@ Manage it using standard FreeBSD service controls such as:
 
 ```sh
 service turnd start
+```
+
+```sh
 service turnd status
+```
+
+```sh
 service turnd stop
 ```
 
